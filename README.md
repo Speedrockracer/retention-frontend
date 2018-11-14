@@ -1,6 +1,9 @@
 # retention-assesment
 
 ## Project setup
+Make sure the server is running on port 8080 (Server url can be changed in constants.js)
+https://github.com/Speedrockracer/retention-server
+
 ```
 yarn install
 ```
