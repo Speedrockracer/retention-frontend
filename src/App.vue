@@ -1,28 +1,62 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <md-app>
+            <md-app-toolbar class="md-primary">
+                <span class="md-title">Retention graph</span>
+            </md-app-toolbar>
+            <md-app-content>
+                <GraphBlocks v-bind:weeks="retention" />
+                <GraphChart v-bind:weeks="retention" />
+            </md-app-content>
+        </md-app>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import axios from "axios"
+    import GraphBlocks from "./components/GraphBlocks"
+    import GraphChart from "./components/GraphChart"
+    import { serverUrl } from "./constants"
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'app',
+
+        data() {
+            return {
+                retention: []
+            }
+        },
+
+        methods: {
+            getData() {
+                axios.get(serverUrl)
+                    .then(response => {
+                        this.retention = response.data
+                    })
+                    .catch(() => {
+                        // Todo: Handle error nicely
+                    })
+            },
+        },
+
+        mounted() {
+            this.getData()
+        },
+
+        components: {
+            GraphBlocks,
+            GraphChart,
+        },
+    }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+    @import "~vue-material/dist/theme/engine";
+
+    @include md-register-theme("default", (
+            primary: md-get-palette-color(blue, A200), // The primary color of your application
+            accent: md-get-palette-color(green, A200) // The accent or secondary color
+    ));
+
+    @import "~vue-material/dist/theme/all";
 </style>
